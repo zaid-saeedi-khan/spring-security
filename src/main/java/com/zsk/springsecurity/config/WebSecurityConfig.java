@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.zsk.springsecurity.config.authprovider.UsernamePasswordAuthProvider;
 
@@ -19,6 +20,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Resource(name = "usernamePasswordAuthProvider")
 	private UsernamePasswordAuthProvider usernamePasswordAuthProvider;
+
+	@Resource(name = "googleAuthSuccessHandler")
+	private AuthenticationSuccessHandler googleAuthSuccessHandler;
 
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(usernamePasswordAuthProvider);
@@ -35,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 			.formLogin()
 				.and()
-			.oauth2Login();
+			.oauth2Login().
+				successHandler(googleAuthSuccessHandler);
 		// @formatter:on
 	}
 
